@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dorada Cover Studio — GTA 6-style multi-panel poster maker</title>
+<meta name="description" content="Turn a photo and a caption into GTA 6-style multi-panel poster cover art. Works offline, exports PNG in 1080x1080, 1080x1350 and 1920x1080.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">DORADA</span>
+    <span class="brand-rest">COVER STUDIO</span>
+    <span class="brand-sub">Isla Dorada · multi-panel poster maker · photo → PNG in a few clicks</span>
+  </div>
+  <div class="top-actions">
+    <button id="btnSampleSetTop" class="btn btn-ghost" type="button">Use sample set</button>
+    <button id="btnRandomizeTop" class="btn btn-ghost" type="button">Randomize</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar" id="sidebar">
+    <section class="panel" id="sectionPhotos">
+      <h2><span class="step">1</span> Photos</h2>
+      <div class="row">
+        <button id="btnSampleSet" class="btn btn-primary" type="button">Use sample set</button>
+        <button id="btnRandomize" class="btn" type="button">Randomize</button>
+      </div>
+      <div class="row">
+        <label class="field-label" for="selSampleFill">Sample photo</label>
+        <select id="selSampleFill"></select>
+        <button id="btnFillAll" class="btn btn-small" type="button">Fill all panels</button>
+      </div>
+      <p class="hint">Pick a sample for the active panel, or drop your own photo onto the preview.</p>
+      <div id="panelRows" class="panel-rows"></div>
+    </section>
+
+    <section class="panel" id="sectionLayout">
+      <h2><span class="step">2</span> Layout</h2>
+      <div id="layoutButtons" class="choice-grid"></div>
+    </section>
+
+    <section class="panel" id="sectionGrade">
+      <h2><span class="step">3</span> Grade</h2>
+      <div id="gradeButtons" class="choice-grid"></div>
+      <label class="check-row">
+        <input id="chkInk" type="checkbox" checked>
+        <span><strong>Poster Ink overlay</strong> — halftone dots + posterized print look, over any grade</span>
+      </label>
+      <div class="slider-row">
+        <label for="rngInk">Intensity</label>
+        <input id="rngInk" type="range" min="0" max="100" value="85" step="1">
+        <span id="lblInk" class="slider-value">85%</span>
+      </div>
+      <p class="hint">Picking Poster Ink turns the ink on by itself. The overlay adds the halftone over any other grade — the band and lettering stay crisp on top.</p>
+    </section>
+
+    <section class="panel" id="sectionCaption">
+      <h2><span class="step">4</span> Caption</h2>
+      <label class="field-label" for="inpTitle">Title</label>
+      <input id="inpTitle" type="text" value="DORADA HEAT" maxlength="24" spellcheck="false">
+      <label class="field-label" for="inpScript">Script subhead</label>
+      <input id="inpScript" type="text" value="isla dorada nights" maxlength="40" spellcheck="false">
+      <label class="field-label" for="inpTagline">Tagline</label>
+      <input id="inpTagline" type="text" value="EVERY STREET IS A STAGE" maxlength="48" spellcheck="false">
+      <div class="row">
+        <div class="field-half">
+          <label class="field-label" for="inpKicker">Kicker badge</label>
+          <input id="inpKicker" type="text" value="ISLA DORADA" maxlength="18" spellcheck="false">
+        </div>
+        <div class="field-half">
+          <label class="field-label" for="selHeat">Heat stars</label>
+          <select id="selHeat">
+            <option value="1">1 star</option>
+            <option value="2">2 stars</option>
+            <option value="3">3 stars</option>
+            <option value="4" selected>4 stars</option>
+            <option value="5">5 stars</option>
+          </select>
+        </div>
+      </div>
+      <div class="row check-row">
+        <label><input id="chkNew" type="checkbox" checked> <span>“NEW” badge</span></label>
+        <label><input id="chkEst" type="checkbox" checked> <span>“EST. 2026” starburst</span></label>
+      </div>
+    </section>
+
+    <section class="panel" id="sectionExport">
+      <h2><span class="step">5</span> Export PNG</h2>
+      <div class="export-grid">
+        <button id="btnExportSquare" class="btn btn-export" type="button">Square<br><span>1080 × 1080</span></button>
+        <button id="btnExportPortrait" class="btn btn-export" type="button">Portrait<br><span>1080 × 1350</span></button>
+        <button id="btnExportLandscape" class="btn btn-export" type="button">Landscape<br><span>1920 × 1080</span></button>
+      </div>
+      <p class="hint">One click writes the PNG straight from the live preview — what you see is what you get.</p>
+      <p id="exportStatus" class="export-status" aria-live="polite"></p>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <div class="preview-wrap">
+      <canvas id="preview" width="960" height="540"></canvas>
+      <canvas id="shotCanvas" width="1280" height="720" hidden></canvas>
+    </div>
+    <p id="statusLine" class="status">Panel: Hero — drag to pan · scroll to zoom · drop a photo here</p>
+  </section>
+</main>
+
+<script src="src/cover.js"></script>
+<script src="src/editor.js"></script>
+<script src="src/shots.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>

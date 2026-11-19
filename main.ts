@@ -21,7 +21,7 @@
 // entrypoint is a real program, not a stub.
 
 import { buildDossier } from './vendor/makefun-app.ts';
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -128,8 +128,14 @@ function handIn(root: string, out: string): void {
   if (!existsSync(appDir)) throw new Error(`no app/ directory in ${root}`);
   if (!existsSync(shotsDir)) throw new Error(`no screenshots/ directory in ${root}`);
 
-  rmSync(out, { recursive: true, force: true });
+  // Empty the output directory's CONTENTS instead of removing the directory
+  // itself: the grader mounts /output as a volume, and removing a mount
+  // point throws EBUSY even with force. mkdir first so the dir exists even
+  // when it was absent, then wipe each child entry.
   mkdirSync(out, { recursive: true });
+  for (const entry of readdirSync(out)) {
+    rmSync(join(out, entry), { recursive: true, force: true });
+  }
   cpSync(appDir, join(out, 'app'), { recursive: true });
   cpSync(shotsDir, join(out, 'screenshots'), { recursive: true });
 
